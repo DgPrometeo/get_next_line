@@ -6,9 +6,11 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 10:52:18 by danielga          #+#    #+#             */
-/*   Updated: 2023/02/23 13:40:16 by danielga         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:41:58 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "get_next_line.h"
 
 char	*get_next_line(int fd)
 {
@@ -35,3 +37,24 @@ char	*get_next_line(int fd)
 	line[i] = '\0';
 	return (line);
 }
+
+/*
+Creamos una reserva de memoria que recoja la información de lo que vaya a
+guardar y no ha leido, para despues seguir leyéndolo. 
+
+Si lee la función debe de dar un número superior a 0 para poder continuar.
+
+READ devuelve el numero de bytes leidos. tiene que ser menor que buffer_size.
+ssize_t read (int fd, void *buf, size_t count): 
+-fd: el file descriptor que leerá.
+-buf: un puntero tomado de la memoria donde se encuentra almacenado la lectura.
+-count: el tamaño de caracteres/bytes a leer.
+Devuelve:
+-Si intenta leer el final del archivo devuelve 0. 
+-Si fd no es valido devuelve -1 estableciendo "errno" en "EBADF".
+-Si el buffer es nulo o mayor al Int_max devolverá -1.
+
+Finalmente, la línea se habrá formado, por lo que añadimos en la posición
+saliente el nulo y devolvemos la línea leída.
+
+*/

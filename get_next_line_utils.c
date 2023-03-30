@@ -6,7 +6,9 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:34:26 by danielga          #+#    #+#             */
-/*   Updated: 2023/02/23 12:34:27 by danielga         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:42:09 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "get_next_line.h"
 
