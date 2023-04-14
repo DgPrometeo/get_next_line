@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:34:26 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/05 20:28:17 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/14 13:28:02 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,30 +63,31 @@ char	*ft_strchr(char *s, int c)
 	return (&s[i]);
 }
 
-char	*ft_strjoin(char *buff, char *s2)
+char	*ft_strjoin(char *buff, char *s1)
 {
 	char	*str;
 	size_t	i;
 	size_t	j;
 
-	if (!buff && !s2)
+	if (!buff && !s1)
 		return (0);
-	str = (char *)malloc(sizeof(char) * (ft_strlen(buff) + ft_strlen(s2) + 1));
+	str = (char *)malloc(sizeof(char) * (ft_strlen(buff) + ft_strlen(s1) + 1));
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (buff[i] != '\0')
+	while (s1[i] != '\0')
 	{
-		str[i] = buff[i];
+		str[i] = s1[i];
 		i++;
 	}
 	j = 0;
-	while (s2[j] != '\0')
+	while (buff[j] != '\0')
 	{
-		str[i] = s2[j];
+		str[i] = buff[j];
 		j++;
 		i++;
 	}
 	str[i] = '\0';
+	free(s1);
 	return (str);
 }
