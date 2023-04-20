@@ -6,38 +6,43 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 10:52:18 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/14 13:19:54 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:21:11 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_read(char *buffer, int fd)
+char	*get_read(char *str, int fd)
 {
 	int		r;
 	char	*tmp;
 
 	r = 1;
-	tmp = ft_calloc_bzero(BUFFER_SIZE, sizeof(char));
-	while (r > 0 && !ft_strchr(buffer, '\n'))
+//	tmp = ft_calloc_bzero(BUFFER_SIZE, sizeof(char));
+	tmp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!tmp)
+		return (NULL);
+	while (r > 0 && !ft_strchr(str, '\n'))
 	{
 		r = read(fd, tmp, BUFFER_SIZE);
 		if (r < 0)
 		{
 			free(tmp);
+			free(str);
 			return (NULL);
 		}
 		tmp[r] = '\0';
-		buffer = ft_strjoin(buffer, tmp);
+		str = ft_strjoin(str, tmp);
 	}
 	free(tmp);
-	return (buffer);
+	return (str);
 }
 
 /*
 Función para leer el archivo. 
 
-necesitaremos un entero que sea nuestro valor de lectura para la función READ;
+Necesitaremos un entero que sea nuestro valor de lectura para la función READ,
+además de crear un puntero para una reserva de memoria temporal tamaño buffer;
 READ devuelve el numero de bytes leidos. tiene que ser menor que buffer_size.
 ssize_t read (int fd, void *buf, size_t count): 
 -fd: el file descriptor que leerá.
@@ -49,13 +54,54 @@ Devuelve:
 -Si fd no es valido devuelve -1 estableciendo "errno" en "EBADF".
 -Si el buffer es nulo o mayor al Int_max devolverá -1.
 
-y un string temporal que será para la reserva de memoria de lo que vaya a leer.
 ahora procedemos a crear un bucle en el que se mantenga mientras tenga algo que 
 leer y no sea '\n', en esa posición, cuando la línea se haya formado añadiremos 
-el nulo, y posteriormente meteremos eso con un strjoin en el buffer original.
+el nulo, y posteriormente meteremos eso con un STRJOIN en el buffer original.
+Liberamos la reserva de memoria temporal creada y devolvemos el buffer con lo
+acumulado.
 */
 
-char	*ft_new_line(char *buffer)
+char	*ft_get_line(char *line)
+{
+	int		i;
+	char	*str;
+
+	if (!line)
+		return (0);
+	i = 0;
+	while (line[i] && line[i] != '\n')
+		i++;
+	str = (char *)malloc(sizeof(char *) * (i + 2));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (line[i] && line[i] != '\n')
+	{
+		str[i] = line[i];
+		i++;
+	}
+	if (line[i] == '\n')
+	{
+		str[i] = line[i];
+		i++;
+		
+	}
+	str[i] = '\0';
+	return (str);
+}
+
+/*
+Esta función cogerá lo leido y los trasladará a la línea para almacenarlo.
+Necesitaremos un contador y una reserva de memoria nueva.
+Por seguridad verificamos que nos haya dado la línea. Ahora, procedemos a 
+localizar donde termina o donde encuentra '\n'. Entonces creamos el malloc
+del tamaño de la línea más dos para contar si tiene '\n' y el nulo.
+revisamos que se haya creado bien y comenzamos a copiarlo hasta nulo o '\n'
+Una vez que se salga del bucle, si ha salido por un '\n' hay que añadirlo también
+y se pone la última posición como nulo. Se devuelve la reserva de memoria nueva.
+*/
+
+char	*ft_new_line(char *buff)
 {
 	int		i;
 	int		j;
@@ -63,21 +109,21 @@ char	*ft_new_line(char *buffer)
 
 	i = 0;
 	j = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buff[i] && buff[i] != '\n')
 		i++;
-	if (!buffer[i])
+/*	if (!buff[i])
 	{
-		free(buffer);
+		free(buff);
 		return (NULL);
-	}
-	str = (char *)malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
+	}*/
+	str = (char *)malloc(sizeof(char) * (ft_strlen(buff) - i + 1));
 	if (!str)
 		return (NULL);
 	i++;
-	while (buffer[i])
-		str[j++] = buffer[i++];
+	while (buff[i])
+		str[j++] = buff[i++];
 	str[j] = '\0';
-	free(buffer);
+	free(buff);
 	return (str);
 }
 
@@ -101,12 +147,13 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*buffer;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	buffer = 0;
-	line = get_read(buffer, fd);
-	if (!line)
+	buffer = get_read(buffer, fd);
+	if (!buffer)
 		return (0);
+	line = ft_get_line(buffer);
 	buffer = ft_new_line(buffer);
 	return (line);
 }
@@ -116,7 +163,12 @@ Creamos una reserva de memoria que recoja la información de lo que vaya a
 guardar y no ha leido, para despues seguir leyéndolo que será nuestro buffer. 
 
 Verificamos que nos ha dado un fd válido, ya que sino no debería funcionar.
-procedemos a leer dandole el almacenaje y el fd. 
+Además, tenemos que verificar que nos haya dado un BUFFER_SIZE posible,
+para que no rompa la función.
+Procedemos a leer dandole el almacenaje y el fd. 
 si no ha conseguido generar el elemento de lo leido, termina la función.
 si todo sale bien, debe de dar lo leído.
+Sacamos lo leído del buffer añadiendolo a line.
+Una vez teniendo la línea, almacenamos el resto de lo leído en el buffer 
+para continuar posteriormente.
 */

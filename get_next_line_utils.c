@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:34:26 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/14 13:28:02 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:20:46 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,40 @@ char	*ft_strjoin(char *buff, char *s1)
 	size_t	i;
 	size_t	j;
 
-	if (!buff && !s1)
-		return (0);
+	if (!buff)
+	{
+		buff = (char *)malloc(sizeof(char) * (1 + 1));
+		if (!buff)
+			return (NULL);
+		buff[0] = '\0';
+	}
 	str = (char *)malloc(sizeof(char) * (ft_strlen(buff) + ft_strlen(s1) + 1));
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (s1[i] != '\0')
+	while (buff[i] != '\0')
 	{
-		str[i] = s1[i];
+		str[i] = buff[i];
 		i++;
 	}
 	j = 0;
-	while (buff[j] != '\0')
+	while (s1[j] != '\0')
 	{
-		str[i] = buff[j];
+		str[i] = s1[j];
 		j++;
 		i++;
 	}
 	str[i] = '\0';
-	free(s1);
+	free(buff);
 	return (str);
 }
+
+/*
+Es similar a la función strjoin pero modificando el principio.
+Si no existiera buff, como es el caso de la primera vez que accede a la función
+tienes que crear un malloc que lo genere ya que al principio se encontrará vacío
+y en él tendrá que añadir lo que venga posteriormente.
+Hacemos un malloc de la capacidad del buff y del s1 más el nulo.
+recorremos primero el buff copiandolo en el nuevo y posteriormente el s1.
+despúes liberamos lo que nos habia dado como buffer y devolvemos la actualizada.
+*/

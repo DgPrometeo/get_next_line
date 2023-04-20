@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 20:35:10 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/10 19:27:17 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/19 17:54:29 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	main(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
+	int		counter;
 
+	counter = 0;
+	line = 0;
 	if (argc != 2)
 	{
 		printf("No has adjuntado un archivo <file>\n");
@@ -30,12 +33,21 @@ int	main(int argc, char **argv)
 		printf("error abriendo el archivo");
 		return (1);
 	}
-	while (line == get_next_line(fd))
+	line = get_next_line(fd);
+	printf("La cadena leída es \"%s\" \n", line);
+	line = get_next_line(fd);
+	printf("La cadena leída es \"%s\" \n", line);
+	line = get_next_line(fd);
+	printf("La cadena leída es \"%s\" \n", line);
+	/*while (line != NULL || counter == 30)
 	{
-		printf("Ha leído %d bytes. La cadena leída es %s\n", fd, line);
+		printf("La cadena leída es %s\n", line);
 		free(line);
-	}
+		line = get_next_line(fd);
+		counter++;
+	}*/
 	close(fd);
+	free(line);
 	return (0);
 }
 
