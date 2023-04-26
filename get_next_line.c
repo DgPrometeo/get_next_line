@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 10:52:18 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/24 10:44:16 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:59:31 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ char	*ft_get_line(char *line)
 	int		i;
 	char	*str;
 
-	if (!line)
-		return (0);
+	if (!line[0])
+		return (NULL);
 	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
@@ -110,6 +110,11 @@ char	*ft_new_line(char *buff)
 	j = 0;
 	while (buff[i] && buff[i] != '\n')
 		i++;
+	if (!buff[i])
+	{
+		free(buff);
+		return (NULL);
+	}
 	str = (char *)malloc(sizeof(char) * (ft_strlen(buff) - i + 1));
 	if (!str)
 		return (NULL);
@@ -128,7 +133,7 @@ Creamos dos enteros para movernos en los strings, y una reserva de memoria.
 desplazamos el buffer hasta la posición del nulo o hasta donde haya leído.
 si no encuentra esa posición, liberamos la reserva y devolvemos nulo.
 Creamos la reserva de memoria con la dimensión del buffer menos lo alcanzado
-más uno para el nulo. Verificamos que se haya creado.
+para recoger lo sobrante más uno para el nulo. Verificamos que se haya creado.
 añadimos uno más de i para saltar el nulo.
 Y nos metemos en un bucle hasta que alcancemos la posición de i en el buffer.
 y procedemos a añadir todo lo de buffer en la nueva reserva de memoria, añadiendo
