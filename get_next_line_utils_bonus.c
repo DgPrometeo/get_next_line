@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 12:34:26 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/27 18:05:59 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/27 18:24:49 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(char *str)
 {
@@ -20,7 +20,7 @@ size_t	ft_strlen(char *str)
 		return (0);
 	i = 0;
 	while (str[i] != '\0')
-	i++;
+		i++;
 	return (i);
 }
 
@@ -52,6 +52,8 @@ char	*ft_strchr(char *s, int c)
 
 	if (!s)
 		return (0);
+	if (c == '\0')
+		return (&s[ft_strlen(s)]);
 	i = 0;
 	x = (char) c;
 	while (s[i] != x)

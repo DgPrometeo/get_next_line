@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 10:52:18 by danielga          #+#    #+#             */
-/*   Updated: 2023/04/26 19:42:47 by danielga         ###   ########.fr       */
+/*   Updated: 2023/04/27 18:01:26 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_read(char *str, int fd)
 {
@@ -143,15 +143,15 @@ Liberamos buffer y devolvemos la nueva reserva actualizada.
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*buffer;
+	static char	*buffer[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	buffer = get_read(buffer, fd);
-	if (!buffer)
+	buffer[fd] = get_read(buffer[fd], fd);
+	if (!buffer[fd])
 		return (0);
-	line = ft_get_line(buffer);
-	buffer = ft_new_line(buffer);
+	line = ft_get_line(buffer[fd]);
+	buffer[fd] = ft_new_line(buffer[fd]);
 	return (line);
 }
 
